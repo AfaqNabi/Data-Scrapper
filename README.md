@@ -1,2 +1,1 @@
-# Data Scrapper
- 
+# TradingBot
