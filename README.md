@@ -15,3 +15,6 @@ To use this bot
 9. back in the terminal run the command ```./exec.sh``` to run the bot
 + their might be issues with permissions simply do ```chmod u+x exec.sh``` and run the previous command again
 10. the webscraping is done headlessly (it wont actually open a chrome browser)
+
+## Liscence
+MIT
