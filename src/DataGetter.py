@@ -25,7 +25,7 @@ from selenium.webdriver.common.keys import Keys
 
 
 def main():
-    conn = sqlite3.connect("StockData.db")
+    conn = sqlite3.connect("Data-Scrapper/database/StockData.db")
     # conn2 = sqlite3.connect("/Users/afaqnabi/PycharmProjects/TradingBot/StockData(1d).db")
     # cursor2 = conn2.cursor()
     cursor = conn.cursor()
@@ -57,7 +57,7 @@ def delete(date, all_stocks, cursor, conn, canadian=False):
 
 def get_symbols():
     all = []
-    with open('All_Stocks.csv') as csv_file:
+    with open('/Data-Scrapper/Tickers/All_Stocks.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         for row in csv_reader:
@@ -132,7 +132,7 @@ def insert_data_for_new_stock_1d(symbol, conn, cursor):
 def scrape_watchlist():
     service = "login"
     info = "info"
-    DRIVER_PATH = '/Users/afaqnabi/PycharmProjects/TradingBot/chromedriver'
+    DRIVER_PATH = '/Data-Scrapper/chromedriver'
     url = "https://login.yahoo.com/?.src=fpctx&.intl=ca&.lang=en-CA&.done=https://ca.yahoo.com&activity=uh-signin&pspid=2142623533"
     finURL = "https://ca.finance.yahoo.com/portfolio/p_1/view/v2"
     username = keyring.get_password(service, info)
