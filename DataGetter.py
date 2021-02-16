@@ -13,6 +13,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import sys
+import os
 
 # use "period" instead of start/end
 #     # valid periods: 1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max
@@ -25,10 +26,12 @@ import sys
 #     interval="5m",
 
 
-def main(argv):
-    global DRIVER_PATH = sys.argv[1]
-    global user_agent = sys.argv[2]
-    conn = sqlite3.connect("/database/StockData.db")
+def main():
+    global DRIVER_PATH
+    global user_agent
+    DRIVER_PATH = sys.argv[1]
+    user_agent = sys.argv[2]
+    conn = sqlite3.connect("StockData.db")
     # conn2 = sqlite3.connect("/Users/afaqnabi/PycharmProjects/TradingBot/StockData(1d).db")
     # cursor2 = conn2.cursor()
     cursor = conn.cursor()
@@ -60,7 +63,7 @@ def delete(date, all_stocks, cursor, conn, canadian=False):
 
 def get_symbols():
     all = []
-    with open('/Tickers/All_Stocks.csv') as csv_file:
+    with open('All_Stocks.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         for row in csv_reader:
