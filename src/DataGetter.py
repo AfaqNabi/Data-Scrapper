@@ -12,6 +12,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+import sys
 
 # use "period" instead of start/end
 #     # valid periods: 1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max
@@ -24,8 +25,10 @@ from selenium.webdriver.common.keys import Keys
 #     interval="5m",
 
 
-def main():
-    conn = sqlite3.connect("Data-Scrapper/database/StockData.db")
+def main(argv):
+    global DRIVER_PATH = sys.argv[1]
+    global user_agent = sys.argv[2]
+    conn = sqlite3.connect("/database/StockData.db")
     # conn2 = sqlite3.connect("/Users/afaqnabi/PycharmProjects/TradingBot/StockData(1d).db")
     # cursor2 = conn2.cursor()
     cursor = conn.cursor()
@@ -57,7 +60,7 @@ def delete(date, all_stocks, cursor, conn, canadian=False):
 
 def get_symbols():
     all = []
-    with open('/Data-Scrapper/Tickers/All_Stocks.csv') as csv_file:
+    with open('/Tickers/All_Stocks.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         for row in csv_reader:
@@ -130,15 +133,15 @@ def insert_data_for_new_stock_1d(symbol, conn, cursor):
 
 
 def scrape_watchlist():
+    global DRIVER_PATH
+    global user_agent
     service = "login"
     info = "info"
-    DRIVER_PATH = '/Data-Scrapper/chromedriver'
     url = "https://login.yahoo.com/?.src=fpctx&.intl=ca&.lang=en-CA&.done=https://ca.yahoo.com&activity=uh-signin&pspid=2142623533"
     finURL = "https://ca.finance.yahoo.com/portfolio/p_1/view/v2"
     username = keyring.get_password(service, info)
     password = keyring.get_password(service, username)
     options = Options()
-    user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36"
     options.headless = True
     options.add_argument(f'user-agent={user_agent}')
     options.add_argument("--window-size=1920,1080")
