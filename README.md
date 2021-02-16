@@ -1,5 +1,5 @@
 ## Data Scraper
-This Script will take your Yahoo watchlist and collect 5 min data on it 
+This Script will take your Yahoo watchlist and collect 5 min data on it along with every stock in the S&P 500
 
 ## Installing
 To use this bot
