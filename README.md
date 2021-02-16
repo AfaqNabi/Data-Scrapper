@@ -18,3 +18,6 @@ To use this bot
 
 ## Liscence
 MIT
+
+## Bugs
+if any bugs are encountered please add it in the issues tab https://github.com/AfaqNabi/Data-Scrapper/issues 
