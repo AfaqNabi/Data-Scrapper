@@ -25,7 +25,7 @@ from selenium.webdriver.common.keys import Keys
 
 
 def main():
-    conn = sqlite3.connect("/Users/afaqnabi/PycharmProjects/TradingBot/StockData.db")
+    conn = sqlite3.connect("StockData.db")
     # conn2 = sqlite3.connect("/Users/afaqnabi/PycharmProjects/TradingBot/StockData(1d).db")
     # cursor2 = conn2.cursor()
     cursor = conn.cursor()
@@ -57,7 +57,7 @@ def delete(date, all_stocks, cursor, conn, canadian=False):
 
 def get_symbols():
     all = []
-    with open('/Users/afaqnabi/PycharmProjects/TradingBot/All_Stocks.csv') as csv_file:
+    with open('All_Stocks.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         for row in csv_reader:
