@@ -32,21 +32,28 @@ def main():
     DRIVER_PATH = sys.argv[1]
     user_agent = sys.argv[2]
     conn = sqlite3.connect("StockData.db")
-    # conn2 = sqlite3.connect("/Users/afaqnabi/PycharmProjects/TradingBot/StockData(1d).db")
-    # cursor2 = conn2.cursor()
     cursor = conn.cursor()
+    conn1d = sqlite3.connect("/StockData(1d).db")
+    cursor1d = conn1d.cursor()
+    conn1m = sqlite3.connect("/StockData(1m).db")
+    cursor1m = conn1m.cursor()
 
     all_stocks = scrape_watchlist()
     for symbol in all_stocks:
-        if is_new(symbol, cursor, conn) is True:
-            # insert_data_for_new_stock_1d(symbol, conn, cursor)
-            insert_data_for_new_stock_5m(symbol, conn, cursor)
+        if is_new(symbol, cursor1m, conn1m):
+            insert_data_for_new_stock(symbol, conn5m, cursor5m, "5m")
+            insert_data_for_new_stock(symbol, conn1m, cursor1m, "1m")
+            insert_data_for_new_stock_1d(symbol, conn1d, cursor1d)
         else:
             try:
-                # data = yf.download(tickers=symbol, period="max", interval="1d", debug=False)
-                # data.to_sql(name=symbol, con=conn, if_exists='append', index=True)
+                data_1d = yf.download(tickers=symbol, period="1d", interval="1d", debug=False)
+                data_1d.to_sql(name=symbol, con=conn1d, if_exists='append', index=True)
+
                 data_5m = yf.download(tickers=symbol, period='1d', interval="5m", debug=False)
-                data_5m.to_sql(name=symbol, con=conn, if_exists='append', index=True)
+                data_5m.to_sql(name=symbol, con=conn5m, if_exists='append', index=True)
+
+                data_1m = yf.download(tickers=symbol, period='1d', interval="1m", debug=False)
+                data_1m.to_sql(name=symbol, con=conn1m, if_exists='append', index=True)
             except Exception:
                 print("Error: Unique Key constraint failed, error is ignored and nothing added to DB(5m): " + symbol)
 
@@ -107,19 +114,23 @@ def is_new(symbol, cursor, conn):
         return False
 
 
-def insert_data_for_new_stock_5m(symbol, conn, cursor):
+def insert_data_for_new_stock(symbol, conn, cursor, time):
     table = "CREATE TABLE IF NOT EXISTS " + '`' + symbol + '`'
     attributes = "(Datetime TEXT , Open REAL, High REAL, Low REAL, Close REAL, `Adj Close` REAL, Volume INTEGER, PRIMARY KEY('Datetime'))"
     create = table + attributes
     cursor.execute(create)
 
-    today = datetime.today()
-    twomonthsBefore = today + relativedelta(days=-55)
-    data = yf.download(tickers=symbol, start=twomonthsBefore, end=today, interval="5m", debug=False)
+    if time == "5m":
+        today = datetime.today()
+        twomonthsBefore = today + relativedelta(days=-55)
+    else:
+        today = datetime.today()
+        twomonthsBefore = today + relativedelta(days=-7)
+    data = yf.download(tickers=symbol, start=twomonthsBefore, end=today, interval=time, debug=False)
     try:
         data.to_sql(name=symbol, con=conn, if_exists='append', index=True)
     except Exception:
-        print("Error: Unique Key constraint failed, error is ignored and nothing added to DB(5m): " + symbol)
+        print("Error: Unique Key constraint failed, error is ignored and nothing added to DB("+time+"): " + symbol)
 
 
 def insert_data_for_new_stock_1d(symbol, conn, cursor):
